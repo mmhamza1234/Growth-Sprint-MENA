@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Navbar } from "@/components/landing/Navbar";
 import { Hero } from "@/components/landing/Hero";
 import { ValueProp } from "@/components/landing/ValueProp";
@@ -7,8 +8,13 @@ import { Metrics } from "@/components/landing/Metrics";
 import { Audience } from "@/components/landing/Audience";
 import { Showcase } from "@/components/landing/Showcase";
 import { Footer } from "@/components/landing/Footer";
+import { initializeChatbase } from "@/lib/chatbaseClient";
 
 export default function Home() {
+  useEffect(() => {
+    initializeChatbase();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-primary/20 selection:text-primary">
       <Navbar />
