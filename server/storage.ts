@@ -1,38 +1,44 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
-
-// modify the interface with any CRUD methods
-// you might need
+import { SprintAssessment } from "@shared/schema";
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  createSprintAssessment(assessment: SprintAssessment): Promise<void>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
+export class GoogleSheetsStorage implements IStorage {
+  private sheetsUrl: string;
 
   constructor() {
-    this.users = new Map();
+    // Uses Google Forms or direct Apps Script deployment
+    // Set GOOGLE_SHEETS_WEBHOOK_URL environment variable
+    this.sheetsUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL || "";
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
-  }
+  async createSprintAssessment(assessment: SprintAssessment): Promise<void> {
+    if (!this.sheetsUrl) {
+      console.error("GOOGLE_SHEETS_WEBHOOK_URL not configured");
+      throw new Error("Sheet integration not configured");
+    }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
-  }
+    try {
+      const response = await fetch(this.sheetsUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          timestamp: new Date().toISOString(),
+          ...assessment,
+        }),
+      });
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+      if (!response.ok) {
+        throw new Error(`Google Sheets error: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Failed to save assessment:", error);
+      throw error;
+    }
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new GoogleSheetsStorage();

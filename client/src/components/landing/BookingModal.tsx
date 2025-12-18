@@ -5,22 +5,19 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { sprintAssessmentSchema } from "@shared/schema";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-
-const formSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  company: z.string().min(2, "Company name is required"),
-  employees: z.string().min(1, "Please select employee count"),
-  bottleneck: z.string().min(10, "Please describe your bottleneck"),
-});
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export function BookingModal({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const form = useForm({
+    resolver: zodResolver(sprintAssessmentSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -30,16 +27,40 @@ export function BookingModal({ children }: { children: React.ReactNode }) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-      title: "Request Sent",
-      description: "We'll be in touch shortly to schedule your assessment.",
-    });
+  async function onSubmit(values: typeof sprintAssessmentSchema._type) {
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/sprint-assessment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Submission failed");
+      }
+
+      toast({
+        title: "Request Sent",
+        description: "We'll be in touch shortly to schedule your assessment.",
+      });
+
+      form.reset();
+      setIsOpen(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Something went wrong",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
@@ -61,7 +82,7 @@ export function BookingModal({ children }: { children: React.ReactNode }) {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="John Doe" {...field} className="bg-white/5 border-white/10" />
+                      <Input placeholder="John Doe" {...field} className="bg-white/5 border-white/10" disabled={isSubmitting} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -74,7 +95,7 @@ export function BookingModal({ children }: { children: React.ReactNode }) {
                   <FormItem>
                     <FormLabel>Work Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="john@company.com" {...field} className="bg-white/5 border-white/10" />
+                      <Input placeholder="john@company.com" {...field} className="bg-white/5 border-white/10" disabled={isSubmitting} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -90,7 +111,7 @@ export function BookingModal({ children }: { children: React.ReactNode }) {
                   <FormItem>
                     <FormLabel>Company</FormLabel>
                     <FormControl>
-                      <Input placeholder="Acme Inc" {...field} className="bg-white/5 border-white/10" />
+                      <Input placeholder="Acme Inc" {...field} className="bg-white/5 border-white/10" disabled={isSubmitting} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -105,7 +126,8 @@ export function BookingModal({ children }: { children: React.ReactNode }) {
                     <FormControl>
                       <select 
                         {...field} 
-                        className="w-full h-10 px-3 rounded-md border border-white/10 bg-white/5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                        disabled={isSubmitting}
+                        className="w-full h-10 px-3 rounded-md border border-white/10 bg-white/5 text-sm focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
                       >
                         <option value="" disabled>Select...</option>
                         <option value="1-15">1-15 (Too small)</option>
@@ -129,7 +151,8 @@ export function BookingModal({ children }: { children: React.ReactNode }) {
                     <Textarea 
                       placeholder="e.g. Roles are unclear, strategy isn't being executed..." 
                       {...field} 
-                      className="bg-white/5 border-white/10 min-h-[100px]" 
+                      disabled={isSubmitting}
+                      className="bg-white/5 border-white/10 min-h-[100px] disabled:opacity-50" 
                     />
                   </FormControl>
                   <FormMessage />
@@ -137,8 +160,15 @@ export function BookingModal({ children }: { children: React.ReactNode }) {
               )}
             />
 
-            <Button type="submit" className="w-full bg-primary text-primary-foreground font-bold hover:bg-primary/90">
-              Request Assessment
+            <Button type="submit" disabled={isSubmitting} className="w-full bg-primary text-primary-foreground font-bold hover:bg-primary/90">
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                "Request Assessment"
+              )}
             </Button>
           </form>
         </Form>
