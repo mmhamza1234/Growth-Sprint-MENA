@@ -49,4 +49,4 @@ mockupState = "FULLSTACK"
 [userenv]
 
 [userenv.shared]
-GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzlV1w0Nh0tAf1Fh0TWg3nOv7lZjNC6sZUKs272s0-Tzn42VOZyRJGZRU4R37U0DWpnXA/exec"
+GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw_B_t8RbPCqahll--KixtcIFDuh_eD2VzV--nqDfmBUn-ACCXMc_KDv4gVXtjXrJQ9/exec"
