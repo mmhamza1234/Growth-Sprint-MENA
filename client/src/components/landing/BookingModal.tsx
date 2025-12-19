@@ -10,13 +10,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export function BookingModal({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
@@ -131,16 +124,16 @@ export function BookingModal({ children }: { children: React.ReactNode }) {
                   <FormItem>
                     <FormLabel>Team Size</FormLabel>
                     <FormControl>
-                      <Select value={field.value} onValueChange={field.onChange} disabled={isSubmitting}>
-                        <SelectTrigger className="bg-white/5 border-white/10 text-foreground">
-                          <SelectValue placeholder="Select..." />
-                        </SelectTrigger>
-                        <SelectContent className="bg-card border-white/10">
-                          <SelectItem value="1-15">1-15 (Too small)</SelectItem>
-                          <SelectItem value="15-70">15-70 (Perfect fit)</SelectItem>
-                          <SelectItem value="70+">70+ (Enterprise)</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <select 
+                        {...field} 
+                        disabled={isSubmitting}
+                        className="w-full h-10 px-3 rounded-md border border-white/10 bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 appearance-none cursor-pointer"
+                      >
+                        <option value="" disabled>Select...</option>
+                        <option value="1-15">1-15 (Too small)</option>
+                        <option value="15-70">15-70 (Perfect fit)</option>
+                        <option value="70+">70+ (Enterprise)</option>
+                      </select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
