@@ -8,8 +8,6 @@ export class GoogleSheetsStorage implements IStorage {
   private sheetsUrl: string;
 
   constructor() {
-    // Uses Google Forms or direct Apps Script deployment
-    // Set GOOGLE_SHEETS_WEBHOOK_URL environment variable
     this.sheetsUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL || "";
   }
 
@@ -20,22 +18,33 @@ export class GoogleSheetsStorage implements IStorage {
     }
 
     try {
+      const payload = {
+        timestamp: new Date().toISOString(),
+        ...assessment,
+      };
+
+      console.log("Sending to Google Sheets:", this.sheetsUrl);
+      console.log("Payload:", JSON.stringify(payload));
+
       const response = await fetch(this.sheetsUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          timestamp: new Date().toISOString(),
-          ...assessment,
-        }),
+        body: JSON.stringify(payload),
       });
 
+      console.log("Google Sheets response status:", response.status);
+      
       if (!response.ok) {
+        const text = await response.text();
+        console.error("Google Sheets error response:", text);
         throw new Error(`Google Sheets error: ${response.statusText}`);
       }
+      
+      console.log("Assessment saved to Google Sheets successfully");
     } catch (error) {
-      console.error("Failed to save assessment:", error);
+      console.error("Failed to save assessment to Google Sheets:", error);
       throw error;
     }
   }
