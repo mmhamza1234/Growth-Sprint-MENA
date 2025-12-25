@@ -1,0 +1,75 @@
+Skip to content
+Navigation Menu
+mmhamza1234
+Growth-Sprint-MENA
+
+Type / to search
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+
+GitHub Pages source saved. 
+Settings: mmhamza1234/Growth-Sprint-MENA
+Access
+Code and automation
+Security
+Integrations
+GitHub Pages
+GitHub Pages is designed to host your personal, organization, or project pages from a GitHub repository.
+
+Your site is live at https://mmhamza1234.github.io/Growth-Sprint-MENA/
+Last deployed by @mmhamza1234 mmhamza1234 5 minutes ago
+Build and deployment
+Source
+Use a suggested workflow, browse all workflows, or create your own.
+
+GitHub Pages Jekyll
+By GitHub Actions
+
+GitHub Pages Jekyll logo
+Package a Jekyll site with GitHub Pages dependencies preinstalled.
+
+Static HTML
+By GitHub Actions
+
+Static HTML logo
+Deploy static files in a repository without a build.
+
+Workflow details will appear here once your site has been deployed. View workflow runs.
+
+Your site was last deployed to the github-pages environment by the pages build and deployment workflow.
+Learn more about deploying to GitHub Pages using custom workflows
+
+Custom domain
+Custom domain
+Custom domains allow you to serve your site from a domain other than mmhamza1234.github.io. Learn more about configuring custom domains.
+
+ 
+
+Enforce HTTPS
+— Required for your site because you are using the default domain (mmhamza1234.github.io)
+HTTPS provides a layer of encryption that prevents others from snooping on or tampering with traffic to your site.
+When HTTPS is enforced, your site will only be served over HTTPS. Learn more about securing your GitHub Pages site with HTTPS.
+
+Visibility
+GitHub Enterprise
+With a GitHub Enterprise account, you can restrict access to your GitHub Pages site by publishing it privately. You can use privately published sites to share your internal documentation or knowledge base with members of your enterprise. You can try GitHub Enterprise risk-free for 30 days. Learn more about the visibility of your GitHub Pages site.
+
+Footer
+© 2025 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Community
+Docs
+Contact
+Manage cookies
+Do not share my personal information
