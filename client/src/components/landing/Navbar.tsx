@@ -32,9 +32,9 @@ export function Navbar() {
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         <Link href="/">
-          <a className="text-2xl font-heading font-bold tracking-tighter text-white">
+          <span className="text-2xl font-heading font-bold tracking-tighter text-white cursor-pointer">
             Wakel<span className="text-primary">.io</span>
-          </a>
+          </span>
         </Link>
 
         {/* Desktop Menu */}
