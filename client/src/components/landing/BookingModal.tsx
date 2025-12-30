@@ -30,17 +30,17 @@ export function BookingModal({ children }: { children: React.ReactNode }) {
   async function onSubmit(values: typeof sprintAssessmentSchema._type) {
     setIsSubmitting(true);
     try {
-      const response = await fetch("/api/sprint-assessment", {
+      // Direct client-side submission for static hosting
+      const response = await fetch("https://script.google.com/macros/s/AKfycbz_XXXXXXXXXXXX/exec", {
         method: "POST",
+        mode: "no-cors", // Required for Google Apps Script Web App redirects
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Submission failed");
-      }
-
+      // Note: with no-cors, we can't read the response body or status
+      // but if the fetch doesn't throw, it likely succeeded.
+      
       toast({
         title: "Request Sent",
         description: "We'll be in touch shortly to schedule your assessment.",

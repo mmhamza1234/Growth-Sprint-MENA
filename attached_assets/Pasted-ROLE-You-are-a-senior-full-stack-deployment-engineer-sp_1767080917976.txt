@@ -1,0 +1,90 @@
+ROLE: You are a senior full-stack deployment engineer specializing in static site deployments, GitHub Pages, Replit hosting, and Google Sheets API integration troubleshooting.
+
+OBJECTIVE: Perform a comprehensive diagnostic and fix ALL deployment errors preventing a static booking application from deploying successfully to GitHub Pages from Replit. The app includes Google Sheets integration for booking submissions and is currently non-functional in production despite working locally.
+
+CONSTRAINTS & REQUIREMENTS:
+1. The application MUST remain a static site (HTML/CSS/JavaScript only — no backend server)
+2. Booking functionality MUST work without modification to user-facing features
+3. Google Sheets integration MUST function in production environment
+4. Deploy successfully to GitHub Pages with zero errors
+5. NO changes to core booking logic or user interface
+
+DIAGNOSTIC CHECKLIST — Investigate Each Area:
+
+### A. Repository Structure & Entry Point
+- Verify `index.html` exists in repository root (case-sensitive, exact filename)
+- Confirm all asset paths use relative URLs (./assets/, ./css/, ./js/)
+- Check for correct file naming conventions (lowercase, no spaces)
+- Validate directory structure matches GitHub Pages requirements
+- Ensure no symlinks or restricted file types exist
+
+### B. Google Sheets API Integration (Critical)
+- Identify API call method: direct fetch(), Google Apps Script Web App, or third-party service
+- Diagnose CORS configuration:
+  * If using Google Apps Script, verify `doPost()`/`doGet()` includes proper CORS headers:
+    ```
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type"
+    ```
+  * Ensure Apps Script is deployed as "Web app" with access set to "Anyone"
+  * Confirm script handles OPTIONS preflight requests
+- Check API authentication method (API key, OAuth, service account)
+- Verify Google Sheet sharing permissions ("Anyone with link can view/edit")
+- Test for environment-specific API endpoint URLs (localhost vs production)
+- Validate JSON payload structure matches expected format
+- Check for hardcoded localhost URLs in API calls
+
+### C. JavaScript Environment & Dependencies
+- Audit all external script CDN links (integrity hashes, HTTPS, availability)
+- Check for `fetch()` API compatibility and polyfills
+- Identify any Node.js-specific modules incorrectly imported
+- Validate all JavaScript runs client-side (no `require()`, `fs`, `path` modules)
+- Scan for environment variables using `process.env` (won't work in browser)
+- Review console errors in browser DevTools when deployed
+
+### D. Replit Configuration
+- Review `.replit` file for incorrect deployment settings:
+  * Remove server-specific commands (`run`, `entrypoint` for backend)
+  * Set correct `[deployment]` config for static sites
+- Check `replit.nix` for unnecessary backend dependencies
+- Verify build command (if any) generates files to correct public directory
+- Confirm deployment secrets/env vars are not required for static site operation
+- Test if "Public directory" in Replit deployment settings points to correct folder
+
+### E. GitHub Pages Configuration
+- Verify GitHub Actions workflow (if used) publishes correct artifact
+- Confirm deployment branch is `main` or configured branch
+- Check Pages settings: Source = correct branch + folder (root or /docs)
+- Validate repository is public (or paid plan for private repos)
+- Ensure no Jekyll processing conflicts (add `.nojekyll` file if needed)
+- Check for custom domain CNAME conflicts
+
+### F. Cross-Origin & Security Issues
+- Identify mixed content warnings (HTTP resources on HTTPS page)
+- Check Content Security Policy headers blocking API requests
+- Verify all external resources use HTTPS
+- Test for iframe embedding restrictions on Google Sheets URLs
+- Review browser console for blocked requests
+
+### G. Deployment Workflow Errors
+- Analyze Replit deployment logs for build failures
+- Check GitHub Actions logs for failed steps
+- Verify file permissions and access rights
+- Confirm no rate limiting from Google APIs
+- Test deployment with minimal viable version first
+
+DELIVERABLES:
+
+1. **Root Cause Analysis**
+   - Exact error messages found in browser console, deployment logs, and network tab
+   - Specific misconfiguration or code issue causing deployment failure
+   - Why it works locally but fails in production
+
+2. **Complete Fix Implementation**
+   - Corrected code snippets with inline comments explaining changes
+   - Updated Google Apps Script (if applicable) with proper CORS handling
+   - Modified file structure or configuration files
+   - Deployment configuration adjustments for Replit and GitHub Pages
+
+3. **Step-by-Step Deployment Instructions**
