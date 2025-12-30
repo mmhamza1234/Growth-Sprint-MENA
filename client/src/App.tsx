@@ -7,17 +7,23 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 
+function Main() {
+  return (
+    <Router hook={useHashLocation}>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route component={NotFound} />
+      </Switch>
+    </Router>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Router hook={useHashLocation}>
-          <Switch>
-            <Route path="/" component={Home} />
-            <Route component={NotFound} />
-          </Switch>
-        </Router>
+        <Main />
       </TooltipProvider>
     </QueryClientProvider>
   );
